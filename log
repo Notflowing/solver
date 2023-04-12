@@ -1,0 +1,10 @@
+3 dimension: 101 x 101 x 101 and iterative method:JACOBI
+1	100
+1	100
+1	100
+3
+iter:      0	delta=0.00166667	time:0.008336s
+iter:   1000	delta=4.51848e-06	time:6.389874s
+iter:   2000	delta=2.50359e-06	time:12.746213s
+iter:   3000	delta=1.51739e-06	time:19.138302s
+Elapsed time: 24.583402s

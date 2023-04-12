@@ -1,0 +1,30 @@
+{
+    "files.associations": {
+        "*.c": "cpp",
+        "*.cu": "cpp",
+        "*.m": "matlab",
+        "array": "cpp",
+        "bitset": "cpp",
+        "initializer_list": "cpp",
+        "random": "cpp",
+        "cmath": "cpp",
+        "ratio": "cpp",
+        "complex": "cpp",
+        "atomic": "cpp",
+        "*.tcc": "cpp",
+        "chrono": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "functional": "cpp",
+        "mutex": "cpp",
+        "streambuf": "cpp",
+        "system_error": "cpp",
+        "thread": "cpp",
+        "tuple": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "enabled",
+    // "C_Cpp.intelliSenseEngine": "Tag Parser"
+}
