@@ -8,8 +8,9 @@
                 "/public/software/cuda-11.5/include",
                 "/public/software/openmpi-4.1.1-cuda.10/include"
             ],
-            "defines": ["__CUDA_ARCH__"],
+            "defines": ["GPU", "FP64"],
             "compilerPath": "/public/software/cuda-11.5/bin/nvcc", // 使用的编译器的完整路径
+            // "compilerPath": "/usr/bin/g++",
             "cStandard": "gnu11",
             "cppStandard": "gnu++14",
             "intelliSenseMode": "linux-gcc-x64"

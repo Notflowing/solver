@@ -1,6 +1,13 @@
 #ifndef __MACRO__
 #define __MACRO__
 
+typedef struct DIMINFO {
+    int M;
+    int N;
+    int K;
+    double DH;
+} DIMINFO;
+
 typedef struct PARAMS {
     int M;
     int N;
