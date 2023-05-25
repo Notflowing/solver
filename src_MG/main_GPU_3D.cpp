@@ -2,12 +2,12 @@
 
 const char *iterMth[] = {"DEFAULT", "JACOBI", "GAUSSSEIDEL", "SOR", "RBGS", "MGRBGS"};
 
-// const double relax_rbgs = 0.1;
+// const double relax_rbgs = 0.5;
 const double relax_rbgs = 1.0;
 
 
 // Set the number of levels and the number of cycles
-const int n_levels = 2; // 0, 1, 2, 3--total 4; level 3 is the base solver
+const int n_levels = 4; // 0, 1, 2, 3--total 4; level 3 is the base solver
 const int n_cycles = 16;
 type_t *res [n_levels - 1];
 type_t *res2[n_levels - 1];
@@ -248,9 +248,9 @@ __global__ void residual_kernel(type_t * __restrict__ r, type_t * __restrict__ u
 
 __global__ void restriction_kernel(type_t * __restrict__ r2, type_t * __restrict__ r, type_t * __restrict__ e2, const int level)
 {
-    int k = threadIdx.x + blockIdx.x * blockDim.x;
-    int j = threadIdx.y + blockIdx.y * blockDim.y;
-    int i = threadIdx.z + blockIdx.z * blockDim.z;
+    int k = threadIdx.x + blockIdx.x * blockDim.x + 1;
+    int j = threadIdx.y + blockIdx.y * blockDim.y + 1;
+    int i = threadIdx.z + blockIdx.z * blockDim.z + 1;
 
     DIMINFO diminfo_coar = dimsinfo_dev[level];
     DIMINFO diminfo_fine = dimsinfo_dev[level - 1];
@@ -267,8 +267,11 @@ __global__ void restriction_kernel(type_t * __restrict__ r2, type_t * __restrict
     //     printf("restrict\n%d_%d_%d_%d_%d_%d\n", Mdim_coar, Ndim_coar, Kdim_coar, Mdim_fine, Ndim_fine, Kdim_fine);
     // }
 
-    if (i >= 0 && i < Mdim_coar && j >= 0 && j < Ndim_coar && k >= 0 && k < Kdim_coar) {
-        r2[INDEX_coar(i, j, k)] = r[INDEX_fine(2*i, 2*j, 2*k)];
+    if (i >= 1 && i < Mdim_coar - 1 && j >= 1 && j < Ndim_coar - 1 && k >= 1 && k < Kdim_coar - 1) {
+        r2[INDEX_coar(i, j, k)] = (1.0 / 12.0) * (6 * r[INDEX_fine(2*i, 2*j, 2*k)] + \
+                                                      r[INDEX_fine(2*i, 2*j, 2*k-1)] + r[INDEX_fine(2*i, 2*j, 2*k+1)] + \
+                                                      r[INDEX_fine(2*i, 2*j-1, 2*k)] + r[INDEX_fine(2*i, 2*j+1, 2*k)] + \
+                                                      r[INDEX_fine(2*i-1, 2*j, 2*k)] + r[INDEX_fine(2*i+1, 2*j, 2*k)]);
         e2[INDEX_coar(i, j, k)] = 0.0;
     }
 
@@ -375,9 +378,9 @@ void vcycle(type_t *u, type_t *f, const int level)
 
 
     // Restriction and fill zero
-    grid_1.x = (dimsinfo[level + 1].K + block.x - 1) / block.x;
-    grid_1.y = (dimsinfo[level + 1].N + block.y - 1) / block.y;
-    grid_1.z = (dimsinfo[level + 1].M + block.z - 1) / block.z;
+    grid_1.x = (dimsinfo[level + 1].K - 2 + block.x - 1) / block.x;
+    grid_1.y = (dimsinfo[level + 1].N - 2 + block.y - 1) / block.y;
+    grid_1.z = (dimsinfo[level + 1].M - 2 + block.z - 1) / block.z;
     restriction_kernel <<<grid_1, block>>> (r2, r, e2, level + 1);
 
 
@@ -494,7 +497,8 @@ void multigrid(type_t *u, type_t *f,
         checkCudaErrors( cublasDnrm2(handle, M*N*K, delta_res, 1, &delta) );
         delta_vector.push_back(delta);
 
-        iter += n_cycles;
+        // iter += n_cycles;
+        iter += (n_cycles) * (n_levels > 1 ? (2 * n_levels - 1) : 1);
         time_inter = seconds();
         printf("iter: %6d\tdelta=%15g\ttime:%fs\n", iter, delta, time_inter-time_start);
         fflush(stdout);

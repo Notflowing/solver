@@ -8,7 +8,7 @@ const char *iterMth[] = {"DEFAULT", "JACOBI", "GAUSSSEIDEL", "SOR", "RBGS", "MGR
 const double relax_rbgs = 1.0;
 
 // Set the number of levels and the number of cycles
-const int n_levels = 2; // 0, 1, 2, 3--total 4; level 3 is the base solver
+const int n_levels = 4; // 0, 1, 2, 3--total 4; level 3 is the base solver
 const int n_cycles = 16;
 type_t *res [n_levels - 1];
 type_t *res2[n_levels - 1];
@@ -346,10 +346,13 @@ void restriction(type_t *r2, type_t *r, type_t *e2, const int level)
     int Kdim_fine = diminfo_fine.K;
 
     int i, j, k;
-    for (i = 0; i < Mdim_coar; i++) {
-        for (j = 0; j < Ndim_coar; j++) {
-            for (k = 0; k < Kdim_coar; k++) {
-                r2[INDEX_coar(i, j, k)] = r[INDEX_fine(2*i, 2*j, 2*k)];
+    for (i = 1; i < Mdim_coar - 1; i++) {
+        for (j = 1; j < Ndim_coar - 1; j++) {
+            for (k = 1; k < Kdim_coar - 1; k++) {
+                r2[INDEX_coar(i, j, k)] = (1.0 / 12.0) * (6 * r[INDEX_fine(2*i, 2*j, 2*k)] + \
+                                                              r[INDEX_fine(2*i, 2*j, 2*k-1)] + r[INDEX_fine(2*i, 2*j, 2*k+1)] + \
+                                                              r[INDEX_fine(2*i, 2*j-1, 2*k)] + r[INDEX_fine(2*i, 2*j+1, 2*k)] + \
+                                                              r[INDEX_fine(2*i-1, 2*j, 2*k)] + r[INDEX_fine(2*i+1, 2*j, 2*k)]);
                 // accumulate residual
                 // r2[INDEX(i, j, k)] = ( r[INDEX(2*i, 2*j, 2*k)]   + r[INDEX(2*i, 2*j, 2*k+1)] + \
                 //                        r[INDEX(2*i, 2*j+1, 2*k)] + r[INDEX(2*i, 2*j+1, 2*k+1)] );
@@ -450,7 +453,6 @@ double calcuDelta(type_t *u, type_t *f, const int level)
 void vcycle(type_t *u, type_t *f, const int level)
 {
     if (level >= n_levels - 1) {
-
         smooth(u, f, level);
         return;
     }
@@ -556,15 +558,15 @@ void multigrid(type_t *u, type_t *f,
         delta = calcuDelta(u, f, 0);
         delta_vector.push_back(delta);
 
-        iter += n_cycles;
-        // iter += (n_cycles) * (n_levels > 1 ? 2 : 1);
+        // iter += n_cycles;
+        iter += (n_cycles) * (n_levels > 1 ? (2 * n_levels - 1) : 1);
         time_inter = seconds();
         printf("iter: %6d\tdelta=%15g\ttime:%fs\n", iter, delta, time_inter-time_start);
         fflush(stdout);
     }
 
     time_end = seconds();
-    printf("Elapsed time: %fs\n", time_end-time_start);
+    printf("\nElapsed time: %fs\n", time_end-time_start);
     writeResult(u, delta_vector, M, N, K, DIM);
 
     for (i = 0; i < n_levels - 1; i++) {

@@ -32,7 +32,7 @@ LIBS += -lm
 # CFLAGS += -std=c++11
 # LFLAGS := -O2
 
-CFLAGS := -x cu -c -O1 -std=c++11
+CFLAGS := -x cu -c -O2 -std=c++11
 # CFLAGS += -g -G
 
 vpath
