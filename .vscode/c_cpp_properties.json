@@ -5,6 +5,7 @@
             "includePath": [    // 设置搜索头文件的路径列表
                 "${workspaceFolder}/**",    // **指示递归搜索
                 "${workspaceFolder}/inc",
+                "/data0/home/wjl/software/gcc-9.4/usr/local/include",
                 "/public/software/cuda-11.5/include",
                 "/public/software/openmpi-4.1.1-cuda.10/include"
             ],
@@ -12,7 +13,7 @@
             "compilerPath": "/public/software/cuda-11.5/bin/nvcc", // 使用的编译器的完整路径
             // "compilerPath": "/usr/bin/g++",
             "cStandard": "gnu11",
-            "cppStandard": "gnu++14",
+            "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64"
         }
     ],

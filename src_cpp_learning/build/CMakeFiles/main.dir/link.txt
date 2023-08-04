@@ -1,0 +1,1 @@
+/data0/home/wjl/software/gcc-9.4/usr/local/bin/g++ CMakeFiles/main.dir/CudaPossion.cu.o -o /data0/home/wjl/matrixSolver/solver/bin/main  /public/software/cuda-11.5/lib64/libcublas.so -lcudadevrt -lcudart_static -lrt -lpthread -ldl  -L"/public/software/cuda-11.5/targets/x86_64-linux/lib/stubs" -L"/public/software/cuda-11.5/targets/x86_64-linux/lib"

@@ -7,3 +7,5 @@ set -e
 # 5: MultiGrid with Red-Black Gauss_Seidel
 
 ./bin/solver_GPU_MG_3D 5 400 400 400
+
+# ./bin/solver_GPU_MG_3D 5 101 101 101

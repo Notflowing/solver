@@ -4,12 +4,12 @@
             "type": "cppbuild",
             "label": "C/C++: gcc build active file",
             // "command": "/usr/bin/gcc",
-            "command": "/usr/bin/g++",
+            "command": "/data0/home/wjl/software/gcc-9.4/usr/local/bin/g++",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
                 "-DFP64",
-                "-std=c++11",
+                "-std=c++17",
                 "-I${workspaceFolder}/inc",
                 "${file}",
                 // "${fileDirname}/*.c*",   // multiple files

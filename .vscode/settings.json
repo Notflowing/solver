@@ -57,7 +57,16 @@
         "cfenv": "cpp",
         "cinttypes": "cpp",
         "utility": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "memory": "cpp",
+        "bit": "cpp",
+        "codecvt": "cpp",
+        "condition_variable": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "algorithm": "cpp",
+        "memory_resource": "cpp",
+        "string_view": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     // "C_Cpp.intelliSenseEngine": "Tag Parser"

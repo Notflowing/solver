@@ -7,7 +7,7 @@ const double relax_rbgs = 1.0;
 
 
 // Set the number of levels and the number of cycles
-const int n_levels = 4; // 0, 1, 2, 3--total 4; level 3 is the base solver
+const int n_levels = 2; // 0, 1, 2, 3--total 4; level 3 is the base solver
 const int n_cycles = 16;
 type_t *res [n_levels - 1];
 type_t *res2[n_levels - 1];
@@ -100,6 +100,7 @@ void initialize(type_t *u, type_t *f, const int Mdim, const int Ndim, const int 
                 idx = INDEX(i, j, k);
                 u[idx] = 0.0;
                 f[idx] = func(i, j, k, DH);
+                // printf("%f\t", f[idx]);
             }
         }
     }
@@ -417,7 +418,7 @@ void multigrid(type_t *u, type_t *f,
     double dh = DH;
     // allocate memory of residual ans error for different level
     for (i = 0; i < n_levels - 1; i++) {
-        // Only for 2D
+
         res[i]  = allocMem_dev(m, n, k);
         m /= 2;
         n /= 2;
