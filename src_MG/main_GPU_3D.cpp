@@ -7,7 +7,7 @@ const double relax_rbgs = 1.0;
 
 
 // Set the number of levels and the number of cycles
-const int n_levels = 2; // 0, 1, 2, 3--total 4; level 3 is the base solver
+const int n_levels = 4; // 0, 1, 2, 3--total 4; level 3 is the base solver
 const int n_cycles = 16;
 type_t *res [n_levels - 1];
 type_t *res2[n_levels - 1];
@@ -108,7 +108,7 @@ void initialize(type_t *u, type_t *f, const int Mdim, const int Ndim, const int 
 }
 
 void writeResult(type_t *u, std::vector<double> &delta,
-                 const int M, const int N, const int K, const int DIM)
+                 const int M, const int N, const int K, const int DIM, double totalTime)
 {
 
     type_t *u_host = (type_t *)malloc(sizeof(type_t) * M*N*K);
@@ -125,7 +125,7 @@ void writeResult(type_t *u, std::vector<double> &delta,
     char filename1[128];
     sprintf(filename1, "output/Multigrid_%d_%dD_dim_type_GPU.txt", n_levels, DIM);
     fp1 = fopen(filename1, "w");
-    fprintf(fp1, "DIM %d %d %d sizeof %d", M, N, K, sizeof(type_t));
+    fprintf(fp1, "DIM %d %d %d sizeof %d totalTime %lf", M, N, K, sizeof(type_t), totalTime);
     fclose(fp1);
 
     FILE *fp2;
@@ -507,7 +507,7 @@ void multigrid(type_t *u, type_t *f,
 
     time_end = seconds();
     printf("\nElapsed time: %fs\n", time_end-time_start);
-    writeResult(u, delta_vector, M, N, K, DIM);
+    writeResult(u, delta_vector, M, N, K, DIM, time_end-time_start);
 
     checkCudaErrors( cudaFree(delta_res) );
     for (i = 0; i < n_levels - 1; i++) {
